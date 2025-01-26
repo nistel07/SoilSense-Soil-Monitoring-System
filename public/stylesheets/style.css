@@ -6,3 +6,50 @@ body {
 a {
   color: #00B7FF;
 }
+.logout-button-container {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+}
+
+.logout-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(to right, #88b7c7, #65b6d5);
+  color: white;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: bold;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 25px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s, transform 0.2s;
+  cursor: pointer;
+}
+
+.logout-button span {
+  margin-right: 10px;
+  font-size: 1.5rem;
+  animation: leafBounce 2s infinite;
+}
+
+.logout-button:hover {
+  background: linear-gradient(to right, #65b6d5, #25424d);
+  transform: scale(1.1);
+}
+
+.logout-button:active {
+  transform: scale(0.95);
+}
+
+@keyframes leafBounce {
+  0%, 100% {
+      transform: translateY(0);
+  }
+  50% {
+      transform: translateY(-5px);
+  }
+}
