@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Soil  Monitoring</title>
+    <title>Soil Monitoring</title>
 
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -515,6 +515,7 @@
 </head>
 
 <body class="background-cyan">
+    <script src="/socket.io/socket.io.js"></script>
     <div class="container">
         <div class="dashboard">
             <div class="logout-button-container">
@@ -663,7 +664,7 @@
                             <div class="stats__title">Water</div>
                             <div class="stats__icon"><span class="wi wi-raindrop"></span></div>
                             <div class="stats__measure">
-                                <div class="stats__value">14</div>
+                                <div class="stats__value" id="moisture">{{moisture}}</div>
                                 <div class="stats__unit stats__unit_meter">m</div>
                             </div>
                         </div>
@@ -722,7 +723,14 @@
             </div>
         </div>
     </div>
+  <script>
+        const socket = io();
 
+        // Update UI when new data arrives
+        socket.on("moistureUpdate", (data) => {
+            document.getElementById("moisture").innerText = data;
+        });
+    </script>
 </body>
 
 </html>

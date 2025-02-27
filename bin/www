@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 
-var app = require('../app');
+const { app } = require("../app"); // Correct import
 var debug = require('debug')('soilease:server');
 var http = require('http');
 
@@ -25,7 +25,7 @@ var server = http.createServer(app);
  * Listen on provided port, on all network interfaces.
  */
 
-server.listen(port);
+
 server.on('error', onError);
 server.on('listening', onListening);
 
