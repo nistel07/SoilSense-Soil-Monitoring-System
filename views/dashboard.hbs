@@ -1,160 +1,314 @@
+<!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Soil Monitoring</title>
-
-    <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.9/css/weather-icons.min.css">3
-
+    <title>SoilEase</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.9/css/weather-icons.min.css">
     <style>
         :root {
-            --color-light-cyan: #b3e6e6;
-            --color-blue: #88b7c7;
-            --color-dark-cyan: #506569;
-            --color-very-dark-cyan: #25424d;
-            --color-gray-lime: #d0d3d0;
-            --color-text-primary: #555555;
-            --color-text-secondary: #989898;
-            --color-very-light-cyan: #f2f5f6;
-            --color-bg-light-gray: #dfdfdf;
-            --color-success: #6b9d38;
-            --color-danger: #de7f7f;
-            --color-primary: #65b6d5;
-            --color-secondary: #9fc0cd;
-            --color-text-1: #333;
-            --color-text-3: #d0d0d0;
-            --color-focus: #4d90fe;
+            --color-primary: #05D9E8;
+            --color-secondary: #01BAEF;
+            --color-dark: #0B132B;
+            --color-darker: #060C21;
+            --color-accent: #FF2A6D;
+            --color-success: #05FF9E;
+            --color-warning: #FFD400;
+            --color-danger: #FF5252;
+            --color-neutral: #9FA7B0;
+            --color-light: #F1F2F6;
+            --card-bg: rgba(11, 19, 43, 0.7);
+            --gradient-glow: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            --box-shadow: 0 8px 32px 0 rgba(5, 217, 232, 0.15);
+            --border-radius: 16px;
+            --transition: all 0.3s ease;
+            --blur-bg: blur(10px);
         }
 
-        *,
-        *:before,
-        *:after {
-            box-sizing: inherit;
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
         body {
-            box-sizing: border-box;
-            font-family: Segoe UI, Open Sans, Arial, sans-serif;
-            /*margin-top: 2rem;*/
-        }
-
-        .background-cyan {
-            background: linear-gradient(to right, var(--color-light-cyan), var(--color-blue));
+            font-family: 'Segoe UI', 'Roboto', sans-serif;
+            background-color: var(--color-darker);
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(5, 217, 232, 0.1) 0%, transparent 25%),
+                radial-gradient(circle at 90% 80%, rgba(1, 186, 239, 0.1) 0%, transparent 25%),
+                radial-gradient(circle at 50% 50%, rgba(255, 42, 109, 0.05) 0%, transparent 50%);
+            color: var(--color-light);
+            min-height: 100vh;
+            padding: 2rem 0;
+            line-height: 1.5;
+            overflow-x: hidden;
         }
 
         .container {
-            max-width: 1140px;
+            max-width: 1280px;
             margin: 0 auto;
+            padding: 0 1rem;
         }
 
         .dashboard {
             display: grid;
-            grid-gap: .375rem;
-            box-shadow: 0 10px 30px 0 rgba(0, 0, 0, .3);
-            border-radius: .5rem;
-            background: linear-gradient(to right, rgba(0, 0, 0, .15) 0%, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, .15) 100%);
+            grid-template-columns: repeat(12, 1fr);
+            grid-gap: 1.5rem;
+            margin-top: 1rem;
         }
 
+        /* Header */
         .dashboard-header {
-            background-color: var(--color-dark-cyan);
-            color: #fff;
-            padding: .75rem 1rem;
+            grid-column: span 12;
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            border-top-left-radius: .5rem;
-            border-top-right-radius: .5rem;
-            grid-row: 1;
-            grid-column: 1/4;
+            margin-bottom: 1rem;
+            padding: 0 1rem;
         }
 
         .dashboard-header__title {
-            font-size: 1.5rem;
-            font-weight: 500;
-            text-transform: uppercase;
-            margin-right: auto;
+            font-size: 2rem;
+            font-weight: 700;
+            background: var(--gradient-glow);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
         }
 
+        .dashboard-header__title i {
+            margin-right: 0.75rem;
+            font-size: 1.75rem;
+            color: var(--color-primary);
+            -webkit-text-fill-color: var(--color-primary);
+        }
+
+        .dashboard-header__date {
+            font-size: 1rem;
+            color: var(--color-neutral);
+            padding: 0.5rem 1rem;
+            background: rgba(11, 19, 43, 0.4);
+            border-radius: 30px;
+            backdrop-filter: var(--blur-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Cards */
         .dashboard-card {
-            background-color: var(--color-very-light-cyan);
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            backdrop-filter: var(--blur-bg);
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
             display: flex;
             flex-direction: column;
-            overflow: auto;
         }
 
-        .dashboard-card:last-child {
-            border-bottom-left-radius: .5rem;
-            border-bottom-right-radius: .5rem;
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px 0 rgba(5, 217, 232, 0.2);
         }
 
         .dashboard-card__title {
-            text-transform: uppercase;
-            color: var(--color-text-secondary);
-            font-size: .75rem;
-            padding: .75rem 1rem;
+            padding: 1.25rem;
             display: flex;
             align-items: center;
+            font-weight: 600;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--color-neutral);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .dashboard-card__title i,
+        .dashboard-card__title .wi {
+            margin-right: 0.75rem;
+            font-size: 1.5rem;
+            color: var(--color-primary);
         }
 
         .dashboad-card__content {
             flex: 1;
             display: flex;
-            flex-direction: row;
-
+            padding: 1.5rem;
         }
 
         .dashboard-card__card-piece {
             display: flex;
             flex: 1;
-            flex-wrap: wrap;
             flex-direction: column;
         }
 
-        .dashboard-card__action {
-            flex: 0 0 100%;
-        }
-
         .dashboard-card__link {
-            color: var(--color-text-primary);
+            color: var(--color-primary);
             text-decoration: none;
-            font-size: .825rem;
-            /*text-align: right;*/
-            align-self: flex-end;
-            /*margin-left: auto;*/
-            padding: .75rem 1rem;
-            transition: background-color .25s;
-            user-select: none;
+            padding: 0.75rem 1.25rem;
+            margin-top: auto;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            transition: var(--transition);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         .dashboard-card__link:hover {
-            background-color: var(--color-bg-light-gray);
+            background-color: rgba(5, 217, 232, 0.1);
         }
 
-        .dashboard-card__link .fa {
-            margin-left: .625rem;
+        .dashboard-card__link i {
+            margin-left: 0.5rem;
+        }
+
+        /* Weather */
+        .weather-days {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .weather-days__item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0.5rem;
+            transition: var(--transition);
+            border-radius: 10px;
+        }
+
+        .weather-days__item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .weather-days__title {
+            font-size: 1rem;
+            color: var(--color-light);
+            margin-bottom: 0.5rem;
+        }
+
+        .weather-days__item:first-child .weather-days__title {
+            font-size: 1.25rem;
             font-weight: 600;
-            font-size: 112.5%;
+            color: var(--color-primary);
         }
 
-        .dashboard-card__title .wi,
-        .dashboard-card__title .fa {
-            font-size: 250%;
-            margin-right: .75rem;
+        .weather-days__icon {
+            font-size: 2.5rem;
+            margin: 0.75rem 0;
+            color: var(--color-primary);
+            text-shadow: 0 0 10px rgba(5, 217, 232, 0.5);
         }
 
-        .status {
-            flex: 1;
+        .weather-days__item:first-child .weather-days__icon {
+            font-size: 3.5rem;
+        }
+
+        .weather-days__humidity {
+            font-size: 0.875rem;
+            color: var(--color-neutral);
+            background: rgba(5, 217, 232, 0.1);
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            margin-top: 0.5rem;
+        }
+
+        .weather-days__humidity:after {
+            content: 'mm';
+            margin-left: 2px;
+        }
+
+        .weather-days__item:first-child .weather-days__humidity:before {
+            content: 'Hum: ';
+        }
+
+        /* Stats */
+        .stats__item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             text-align: center;
+            padding: 0.5rem;
+        }
+
+        .stats__title {
+            font-size: 1rem;
+            text-transform: uppercase;
+            color: var(--color-neutral);
+            margin-bottom: 0.5rem;
+            letter-spacing: 1px;
+        }
+
+        .stats__icon {
+            font-size: 1.75rem;
+            margin: 0.5rem 0;
+            color: var(--color-primary);
+        }
+
+        .stats__measure {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            margin-top: 0.5rem;
+        }
+
+        .stats__value {
+            font-size: 2.5rem;
+            font-weight: 300;
+            color: var(--color-light);
+            line-height: 1;
+        }
+
+        .stats__unit {
+            font-size: 1rem;
+            color: var(--color-neutral);
+            position: relative;
+            margin-left: 0.25rem;
+            margin-top: 0.25rem;
+        }
+
+        .stats__unit_celsius:before {
+            content: '°';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            font-size: 0.875rem;
+        }
+
+        .stats__unit_meter:after {
+            content: '3';
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            font-size: 0.675rem;
+        }
+
+        /* Status */
+        .status {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 0;
         }
 
         .status__icon {
-            font-size: 250%;
+            font-size: 3rem;
+            margin-bottom: 1rem;
         }
 
         .status__text {
-            text-transform: uppercase;
+            font-size: 1.25rem;
+            font-weight: 600;
+            letter-spacing: 1px;
         }
 
         .status_success {
@@ -165,572 +319,421 @@
             color: var(--color-danger);
         }
 
-        .weather-days {
-            flex: 1;
-            display: flex;
-            margin: 0 1rem;
-        }
-
-        .weather-days__item {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-direction: column;
-        }
-
-        .weather-days__item:first-child .weather-days__title {
-            font-size: 1.625rem;
-            line-height: 1;
-        }
-
-        .weather-days__item:first-child .weather-days__icon {
-            font-size: 450%;
-        }
-
-        .weather-days__item:first-child .weather-days__humidity {
-            font-size: 1rem;
-        }
-
-        .weather-days__item:first-child .weather-days__humidity:before {
-            content: 'Hum: ';
-        }
-
-
-        .weather-days__humidity {
-            color: var(--color-gray-lime);
-            font-size: .75rem;
-            /*padding: .5rem;*/
-        }
-
-        .weather-days__humidity:after {
-            content: 'mm';
-        }
-
-        .weather-days__title {
-            color: var(--color-primary);
-            font-size: 1.25rem;
-            /*line-height: 1.5rem;*/
-            text-transform: uppercase;
-            line-height: 1.875rem;
-            flex: 0 0 2rem;
-            /*padding: .5rem;*/
-        }
-
-        .weather-days__icon {
-            font-size: 350%;
-            color: var(--color-secondary);
-            /*padding: .5rem;*/
-        }
-
-        .temperature-stats {
-            flex: 1;
-            display: flex;
-        }
-
-        .stats__item {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-direction: column;
-        }
-
-        .stats__title {
-            color: var(--color-primary);
-            font-size: 1.5rem;
-            line-height: 1;
-            /*line-height: 1.5rem;*/
-            text-transform: uppercase;
-            flex: 0 0 2rem;
-            /*padding: .5rem;*/
-        }
-
-        .stats__icon {
-            font-size: 200%;
-            color: var(--color-secondary);
-        }
-
-        .stats__measure {
-            color: var(--color-very-dark-cyan);
-            font-weight: 100;
-            display: flex;
-        }
-
-        .stats__value {
-            font-size: 4rem;
-        }
-
-        .stats__unit {
-            /*display: */
-            font-size: 1.75rem;
-            position: relative;
-        }
-
-        .stats__unit_celsius {
-            margin-top: 1rem;
-            margin-left: .5rem;
-        }
-
-        .stats__unit_meter {
-            margin-left: .25rem;
-            margin-top: .75rem;
-        }
-
-        .stats__unit_power {
-            margin-left: .5rem;
-            margin-top: .75rem;
-        }
-
-        .stats__unit_celsius:before {
-            content: 'o';
-            font-size: .75rem;
-            position: absolute;
-            top: .125rem;
-            left: -.375rem;
-        }
-
-        .stats__unit_meter:after {
-            content: '3';
-            font-size: .75rem;
-            position: absolute;
-            top: .375rem;
-            right: -.375rem;
-        }
-
+        /* Switches */
         .light-switches {
-            display: flex;
-            flex-wrap: wrap;
-            height: 100%;
-            margin-bottom: 2rem;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            width: 100%;
+            padding: 0.5rem;
         }
 
         .switch {
             display: flex;
-            width: 200px;
             justify-content: space-between;
             align-items: center;
-            flex: 1 0 50%;
-            padding: .5rem 9%;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            transition: var(--transition);
+        }
+
+        .switch:hover {
+            background: rgba(255, 255, 255, 0.1);
         }
 
         .switch__name {
-            color: var(--color-text-secondary);
+            font-size: 0.95rem;
+            color: var(--color-light);
             font-weight: 500;
-            font-size: 1.125rem;
         }
 
         .switch__input {
             opacity: 0;
+            position: absolute;
         }
 
         .switch__label {
-            background-color: #dcdcdc;
-            height: 1rem;
-            width: 4rem;
-            border-radius: 1rem;
-            transition: background-color .3s;
             position: relative;
+            display: inline-block;
+            width: 3.5rem;
+            height: 1.75rem;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
             cursor: pointer;
+            transition: var(--transition);
         }
 
         .switch__label:before {
             content: '';
-            background-color: #fff;
-            border: 1px solid #e1e3e3;
-            border-radius: 50%;
-            width: 1.75rem;
-            height: 1.75rem;
-            top: -0.375rem;
-            left: 0;
             position: absolute;
-            transition: left .3s;
-            box-shadow: 0 0 2px 0 rgba(220, 220, 220, .75);
+            width: 1.35rem;
+            height: 1.35rem;
+            border-radius: 50%;
+            top: 0.2rem;
+            left: 0.2rem;
+            background-color: var(--color-light);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: var(--transition);
         }
 
-        .switch__input:focus~.switch__label {
-            outline: var(--color-focus) auto 10px;
+        .switch__input:checked + .switch__label {
+            background-color: var(--color-primary);
+            box-shadow: 0 0 10px rgba(5, 217, 232, 0.5);
         }
 
-        .switch__input:checked~.switch__label {
-            background-color: #65b6d5;
+        .switch__input:checked + .switch__label:before {
+            transform: translateX(1.75rem);
         }
 
-        .switch__input:checked~.switch__label:before {
-            left: 2.25rem;
+        .switch__input:focus + .switch__label {
+            box-shadow: 0 0 0 2px rgba(5, 217, 232, 0.5);
         }
 
-        .dashboard {
-            grid-template-columns: repeat(3, 1fr);
+        /* Logout Button */
+        .logout-button-container {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
         }
 
+        .logout-button {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            color: var(--color-light);
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: var(--transition);
+            backdrop-filter: var(--blur-bg);
+        }
+
+        .logout-button:hover {
+            background: rgba(255, 42, 109, 0.1);
+            border-color: var(--color-accent);
+            color: var(--color-accent);
+        }
+
+        .logout-button i {
+            margin-right: 0.5rem;
+        }
+
+        /* Grid Layout */
         .weather {
-            grid-row: 2;
-            grid-column: 1/3;
+            grid-column: span 8;
         }
 
         .temperature {
-            grid-row: 2;
-            grid-column: 3;
+            grid-column: span 4;
         }
 
-        .wifi {
-            grid-row: 3;
-            grid-column: 1;
-        }
-
-        .alarm {
-            grid-row: 4;
-            grid-column: 1;
+        .wifi, .alarm {
+            grid-column: span 3;
         }
 
         .light {
-            grid-row: 3/5;
-            grid-column: 2/4;
+            grid-column: span 6;
         }
 
         .power {
-            grid-row: 5;
-            grid-column: 1/4;
+            grid-column: span 12;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .power .dashboad-card__content {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 1rem;
+        }
+
+        .temperature-stats {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+        }
+
+        /* Make dashboard responsive */
+        @media (max-width: 1200px) {
+            .weather {
+                grid-column: span 9;
+            }
+            
+            .temperature {
+                grid-column: span 3;
+            }
+            
+            .wifi, .alarm {
+                grid-column: span 3;
+            }
+            
+            .light {
+                grid-column: span 6;
+            }
         }
 
         @media (max-width: 992px) {
             .dashboard {
-                grid-template-columns: repeat(2, 1fr);
-                grid-template-rows: auto;
+                grid-gap: 1rem;
             }
-
-            .dashboard-header {
-                grid-column: 1/3;
-            }
-
+            
             .weather {
-                grid-row: 2;
-                grid-column: 1/3;
+                grid-column: span 8;
             }
-
+            
             .temperature {
-                grid-row: 3/5;
-                grid-column: 1;
+                grid-column: span 4;
             }
-
-            .wifi {
-                grid-row: 3;
-                grid-column: 2;
+            
+            .wifi, .alarm {
+                grid-column: span 4;
             }
-
-            .alarm {
-                grid-row: 4;
-                grid-column: 2;
-            }
-
+            
             .light {
-                grid-row: 5;
-                grid-column: 1/3;
+                grid-column: span 8;
             }
-
-            .power {
-                grid-row: 6;
-                grid-column: 1/3;
+            
+            .power .dashboad-card__content {
+                grid-template-columns: repeat(3, 1fr);
             }
+        }
 
-            .light-switches:last-child {
-                margin-bottom: 1rem;
+        @media (max-width: 768px) {
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .weather, .temperature {
+                grid-column: span 12;
+            }
+            
+            .wifi, .alarm {
+                grid-column: span 6;
+            }
+            
+            .light {
+                grid-column: span 12;
+            }
+            
+            .power .dashboad-card__content {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .light-switches {
+                grid-template-columns: 1fr;
             }
         }
 
         @media (max-width: 576px) {
-            .wi {
-                font-size: 70%;
-            }
-
             .dashboard {
+                grid-gap: 0.75rem;
+            }
+            
+            .weather-days__item:not(:first-child) {
+                display: none;
+            }
+            
+            .weather-days__item:first-child {
+                flex: 1;
+            }
+            
+            .wifi, .alarm {
+                grid-column: span 12;
+            }
+            
+            .power .dashboad-card__content {
                 grid-template-columns: 1fr;
             }
-
-            .dashboard-header {
-                grid-column: 1;
+            
+            .stats__value {
+                font-size: 2rem;
             }
-
-            .weather {
-                grid-row: 2;
-                grid-column: 1;
-            }
-
-            .temperature {
-                grid-row: 3;
-                grid-column: 1;
-            }
-
-            .wifi {
-                grid-row: 4;
-                grid-column: 1;
-            }
-
-            .alarm {
-                grid-row: 5;
-                grid-column: 1;
-            }
-
-            .light {
-                grid-row: 6;
-                grid-column: 1;
-            }
-
-            .power {
-                grid-row: 7;
-                grid-column: 1;
-            }
-
-            .power .dashboard-card__card-piece {
-                flex-basis: 100%;
-            }
-
-            .power .dashboard-card__card-piece:not(:last-child) {
+            
+            .logout-button-container {
+                position: static;
                 margin-bottom: 1rem;
-                border-bottom: 2px solid var(--color-text-3);
+                display: flex;
+                justify-content: flex-end;
             }
+        }
 
-            .power .dashboad-card__content {
-                flex-wrap: wrap;
+        /* Animation pulse effect for status icons */
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(5, 217, 232, 0.7);
             }
+            70% {
+                box-shadow: 0 0 0 10px rgba(5, 217, 232, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(5, 217, 232, 0);
+            }
+        }
 
-            .switch_order-1 {
-                order: 1;
-            }
+        .status__icon {
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-            .switch_order-2 {
-                order: 2;
-            }
+        .status_success .status__icon {
+            box-shadow: 0 0 0 rgba(5, 255, 158, 0.7);
+            animation: pulse 2s infinite;
+        }
 
-            .switch {
-                flex: 1 0 100%;
-            }
-
-            .switch__label {
-                margin-right: 0;
-            }
+        .status_danger .status__icon {
+            box-shadow: 0 0 0 rgba(255, 82, 82, 0.7);
+            animation: pulse 2s infinite;
         }
     </style>
 </head>
 
-<body class="background-cyan">
-    <script src="/socket.io/socket.io.js"></script>
+<body>
     <div class="container">
+        <div class="logout-button-container">
+            <a href="/logout" class="logout-button" title="Logout">
+                <i class="fas fa-leaf"></i> Logout
+            </a>
+        </div>
+        
+        <div class="dashboard-header">
+            <h1 class="dashboard-header__title"><i class="fas fa-seedling"></i>Soil Ease Soil Monitoring System (SESMS)</h1>
+
+            <div class="dashboard-header__date" id="date">Sunday, October 19th</div>
+        </div>
+        
         <div class="dashboard">
-            <div class="logout-button-container">
-                <a href="/logout" class="logout-button" title="Logout">
-                    <span class="fa fa-leaf"></span> Logout
-                </a>
-            </div>
-            <div class="dashboard-header">
-                <div class="dashboard-header__title">Dashboard</div>
-                <div class="dashboard-header__date">Sunday, October 19th</div>
-            </div>
             <div class="dashboard-card weather">
-                <div class="dashboard-card__title"><span class="wi wi-day-sunny"></span>Weather</div>
+                <div class="dashboard-card__title"><i class="wi wi-day-sunny"></i>FEEDBACK</div>
                 <div class="dashboad-card__content">
                     <div class="dashboard-card__card-piece">
-                        <div class="weather-days">
-                            <div class="weather-days__item">
-                                <div class="weather-days__title">Today</div>
-                                <div class="weather-days__icon">
-                                    <span class="wi wi-day-cloudy"></span>
-                                </div>
-                                <div class="weather-days__humidity">0.2</div>
-                            </div>
-                            <div class="weather-days__item">
-                                <div class="weather-days__title">Mon</div>
-                                <div class="weather-days__icon">
-                                    <span class="wi wi-cloudy"></span>
-                                </div>
-                                <div class="weather-days__humidity">0.4</div>
-                            </div>
-                            <div class="weather-days__item">
-                                <div class="weather-days__title">Tue</div>
-                                <div class="weather-days__icon">
-                                    <span class="wi wi-day-rain"></span>
-                                </div>
-                                <div class="weather-days__humidity">0.7</div>
-                            </div>
-                            <div class="weather-days__item">
-                                <div class="weather-days__title">Wed</div>
-                                <div class="weather-days__icon">
-                                    <span class="wi wi-day-rain"></span>
-                                </div>
-                                <div class="weather-days__humidity">0.9</div>
-                            </div>
-                            <div class="weather-days__item">
-                                <div class="weather-days__title">Thu</div>
-                                <div class="weather-days__icon">
-                                    <span class="wi wi-day-sunny"></span>
-                                </div>
-                                <div class="weather-days__humidity">0.1</div>
-                            </div>
+                        <div class="weather-days" id="feedback">
+                           
                         </div>
-                        <a href="#" class="dashboard-card__link" tabindex="1">View in details<span
-                                class="fa fa-angle-right"></span></a>
                     </div>
                 </div>
+                <a href="#" class="dashboard-card__link" tabindex="1">View in details<i class="fas   "></i></a>
             </div>
+            
             <div class="dashboard-card temperature">
-                <div class="dashboard-card__title"><span class="wi wi-thermometer"></span>Temperature</div>
+                <div class="dashboard-card__title"><i class="wi wi-thermometer"></i>Temperature</div>
                 <div class="dashboad-card__content">
                     <div class="dashboard-card__card-piece">
                         <div class="temperature-stats">
                             <div class="stats__item">
-                                <div class="stats__title">SOIL </div>
-                                <div class="stats__icon"><span class="fa fa-home"></span></div>
+                                
+                                <div class="stats__icon"><i class="wi wi-day-cloudy"></i></div>
                                 <div class="stats__measure">
-                                    <div class="stats__value">22</div>
+                                    <div class="stats__value" id="temp">22</div>
                                     <div class="stats__unit stats__unit_celsius">C</div>
                                 </div>
                             </div>
-                            <div class="stats__item">
-                                <div class="stats__title">Outdoor</div>
-                                <div class="stats__icon"><span class="wi wi-day-cloudy"></span></div>
-                                <div class="stats__measure">
-                                    <div class="stats__value">18</div>
-                                    <div class="stats__unit stats__unit_celsius">C</div>
-                                </div>
-                            </div>
-                        </div>
-                        <a href="#" class="dashboard-card__link" tabindex="1">Edit<span
-                                class="fa fa-angle-right"></span></a>
-                    </div>
-                </div>
-            </div>
-            <div class="dashboard-card wifi">
-                <div class="dashboard-card__title"><span class="fa fa-wifi"></span>Health</div>
-                <div class="dashboad-card__content">
-                    <div class="dashboard-card__card-piece">
-                        <div class="status status_success">
-                            <div class="status__icon"><span class="fa fa-check"></span></div>
-                            <div class="status__text">ACTIVE</div>
-                        </div>
-                        <a href="#" class="dashboard-card__link" tabindex="1">Edit<span
-                                class="fa fa-angle-right"></span></a>
-                    </div>
-                </div>
-            </div>
-            <div class="dashboard-card alarm">
-                <div class="dashboard-card__title"><span class="fa fa-bell-o"></span>Cloud</div>
-                <div class="dashboad-card__content">
-                    <div class="dashboard-card__card-piece">
-                        <div class="status status_danger">
-                            <div class="status__icon"><span class="fa fa-times"></span></div>
-                            <div class="status__text">OFFLINE</div>
-                        </div>
-                        <a href="#" class="dashboard-card__link" tabindex="1">Edit<span
-                                class="fa fa-angle-right"></span></a>
-                    </div>
-                </div>
-            </div>
-            <div class="dashboard-card light">
-                <div class="dashboard-card__title"><span class="fa fa-lightbulb-o"></span>Switches</div>
-                <div class="dashboad-card__content">
-                    <div class="dashboard-card__card-piece">
-                        <div class="light-switches">
-                            <div class="switch switch_order-1">
-                                <div class="switch__name">NPK Sensor</div>
-                                <input type="checkbox" id="switch1" class="switch__input" tabindex="2" checked></input>
-                                <label for="switch1" class="switch__label"></label>
-                            </div>
-                            <div class="switch switch_order-2">
-                                <div class="switch__name">Humidity Sensor</div>
-                                <input type="checkbox" id="switch2" class="switch__input" tabindex="3"></input>
-                                <label for="switch2" class="switch__label"></label>
-                            </div>
-                            <div class="switch switch_order-1">
-                                <div class="switch__name">Temp Sensor</div>
-                                <input type="checkbox" id="switch3" class="switch__input" tabindex="2"></input>
-                                <label for="switch3" class="switch__label"></label>
-                            </div>
-                            <div class="switch switch_order-2">
-                                <div class="switch__name">Water Sensor</div>
-                                <input type="checkbox" id="switch4" class="switch__input" tabindex="3"></input>
-                                <label for="switch4" class="switch__label"></label>
-                            </div>
-
+                           
                         </div>
                     </div>
                 </div>
+                <a href="#" class="dashboard-card__link" tabindex="1">Edit<i class="fas   "></i></a>
             </div>
-            <div class="dashboard-card power">
-                <div class="dashboard-card__title"><span class="fa fa-bar-chart"></span>Data</div>
+             <div class="dashboard-card power">
+                <div class="dashboard-card__title"><i class="fas fa-chart-bar"></i>Soil Analysis Data</div>
                 <div class="dashboad-card__content">
                     <div class="dashboard-card__card-piece">
                         <div class="stats__item">
                             <div class="stats__title">Water</div>
-                            <div class="stats__icon"><span class="wi wi-raindrop"></span></div>
+                            <div class="stats__icon"><i class="wi wi-raindrop"></i></div>
                             <div class="stats__measure">
                                 <div class="stats__value" id="moisture">{{moisture}}</div>
                                 <div class="stats__unit stats__unit_meter">m</div>
                             </div>
                         </div>
-                        <a href="#" class="dashboard-card__link" tabindex="4">View in details<span
-                                class="fa fa-angle-right"></span></a>
+                        
                     </div>
                     <div class="dashboard-card__card-piece">
                         <div class="stats__item">
                             <div class="stats__title">Humidity</div>
-                            <div class="stats__icon"><span class="fa fa-flash"></span></div>
+                            <div class="stats__icon"><i class="fas fa-tint"></i></div>
                             <div class="stats__measure">
-                                <div class="stats__value">49</div>
-                                <div class="stats__unit stats__unit_power">kw/h</div>
+                                <div class="stats__value" id="humidity">49</div>
+                                <div class="stats__unit stats__unit_power">%</div>
                             </div>
                         </div>
-                        <a href="#" class="dashboard-card__link" tabindex="4">View in details<span
-                                class="fa fa-angle-right"></span></a>
+                        
                     </div>
                     <div class="dashboard-card__card-piece">
                         <div class="stats__item">
-                            <div class="stats__title">Nitorgen</div>
-                            <div class="stats__icon"><span class="fa fa-fire"></span></div>
+                            <div class="stats__title">Nitrogen</div>
+                            <div class="stats__icon"><i class="fas fa-atom"></i></div>
                             <div class="stats__measure">
-                                <div class="stats__value">37</div>
-                                <div class="stats__unit stats__unit_meter">m</div>
+                                <div class="stats__value" id="nitrogen">37</div>
+                                <div class="stats__unit ">mg/kg</div>
                             </div>
                         </div>
-                        <a href="#" class="dashboard-card__link" tabindex="4">View in details<span
-                                class="fa fa-angle-right"></span></a>
+                        
                     </div>
                     <div class="dashboard-card__card-piece">
                         <div class="stats__item">
-                            <div class="stats__title">Sodium</div>
-                            <div class="stats__icon"><span class="fa fa-fire"></span></div>
+                            <div class="stats__title">Phosphorus</div>
+                            <div class="stats__icon"><i class="fas fa-flask"></i></div>
                             <div class="stats__measure">
-                                <div class="stats__value">37</div>
-                                <div class="stats__unit stats__unit_meter">m</div>
+                                <div class="stats__value" id="phosphorous">37</div>
+                                <div class="stats__unit ">mg/kg</div>
                             </div>
                         </div>
-                        <a href="#" class="dashboard-card__link" tabindex="4">View in details<span
-                                class="fa fa-angle-right"></span></a>
+                        
                     </div>
                     <div class="dashboard-card__card-piece">
                         <div class="stats__item">
-                            <div class="stats__title">Pottasium</div>
-                            <div class="stats__icon"><span class="fa fa-fire"></span></div>
+                            <div class="stats__title">Potassium</div>
+                            <div class="stats__icon"><i class="fas fa-vial"></i></div>
                             <div class="stats__measure">
-                                <div class="stats__value">37</div>
-                                <div class="stats__unit stats__unit_meter">m</div>
+                                <div class="stats__value" id="pottasium">37</div>
+                                <div class="stats__unit ">mg/kg</div>
                             </div>
                         </div>
-                        <a href="#" class="dashboard-card__link" tabindex="4">View in details<span
-                                class="fa fa-angle-right"></span></a>
+                        
                     </div>
                 </div>
             </div>
+           
+           
         </div>
     </div>
-  <script>
+    
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
         const socket = io();
 
         // Update UI when new data arrives
-        socket.on("moistureUpdate", (data) => {
-            document.getElementById("moisture").innerText = data;
+        socket.on("sensorUpdate", (data) => {
+            console.log(data);
+            document.getElementById("moisture").innerText = data.moisture;
+            document.getElementById("humidity").innerText = data.humidity;
+            document.getElementById("nitrogen").innerText = data.nitrogen;
+            document.getElementById("phosphorous").innerText = data.phosphorus;
+            document.getElementById("pottasium").innerText = data.potassium;
+            document.getElementById("temp").innerText = data.temperature;
+            document.getElementById("feedback").innerText = data.ai;
+             // show current date in this format "Sunday, October 19th
+            const date = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById("date").innerText = date.toLocaleDateString('en-US', options);
+            //display live time
+            setInterval(() => {
+                const time = new Date();
+                document.getElementById("date").innerText = time.toLocaleDateString('en-US', options) + " " + time.toLocaleTimeString();
+            }, 1000);
+
+
         });
     </script>
 </body>
-
 </html>

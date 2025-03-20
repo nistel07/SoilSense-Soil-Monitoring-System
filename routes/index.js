@@ -6,12 +6,31 @@ const isAuthenticated = require("../middlewares/authMiddleware");
 const http = require("http");
 const { Server } = require("socket.io");
 const bodyParser = require("body-parser");
+const cron = require("node-cron");
 
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
+// import OpenAI from "openai";
+// import dotenv from "dotenv";
+
+
+const OpenAI = require("openai");
+const dotenv = require("dotenv");
+
+
+
+dotenv.config();
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
 
 let moistureData = 0;
+let aiFeedback = "No feedback yet";
+
+
+
 
 // Function to initialize router with io instance
 module.exports = (io) => {
@@ -22,30 +41,84 @@ module.exports = (io) => {
 
   // Authentication page
   router.get("/auth", async (req, res) => {
-    res.render("auth", { title: "Login",moisture: moistureData });
+    res.render("auth", { title: "Login", moisture: moistureData });
   });
 
   // Route to receive moisture data from sensors
-  router.post("/update-moisture", (req, res) => {
-    if (req.body.moisture !== undefined) {
-      moistureData = req.body.moisture;
-      console.log("Moisture Updated:", moistureData);
-      
-      io.emit("moistureUpdate", moistureData); // Broadcast update to clients
-      res.status(200).send("Updated");
-    } else {
-      res.status(400).send("Invalid Data");
+  let isProcessing = false; // Prevent overlapping AI requests
+
+  // Route to receive sensor data
+  router.post("/sensor", async (req, res) => {
+    try {
+      // Extract sensor values from request body
+      const { moisture, nitrogen, phosphorus, potassium, temperature, humidity } = req.body;
+
+      // Ensure valid sensor data
+      if ([moisture, nitrogen, phosphorus, potassium, temperature, humidity].some(isNaN)) {
+        return res.status(400).send("Invalid sensor data");
+      }
+
+      // Store the latest sensor values
+      const sensorData = { moisture, humidity, temperature, nitrogen, phosphorus, potassium };
+
+      // Emit the raw sensor data first
+      io.emit("sensorUpdate", { ...sensorData, ai: aiFeedback });
+
+      // Schedule AI feedback update every 1 minute
+      cron.schedule("*/1 * * * *", async () => {
+        if (isProcessing) return; // Prevent multiple overlapping calls
+        isProcessing = true;
+
+        try {
+          console.log("Fetching AI feedback...");
+          aiFeedback = await getSoilFeedback(sensorData); // Fetch AI feedback
+          console.log("AI feedback received:", aiFeedback);
+
+          // Emit updated data with AI feedback
+          io.emit("sensorUpdate", { ...sensorData, ai: aiFeedback });
+        } catch (error) {
+          console.error("Error fetching AI feedback:", error);
+        } finally {
+          isProcessing = false;
+        }
+      });
+
+      res.status(200).send("Sensor data received");
+    } catch (error) {
+      console.error("Server error:", error);
+      res.status(500).send("Internal Server Error");
     }
   });
+
+  // Function to fetch AI feedback from OpenAI
+  async function getSoilFeedback(sensorData) {
+    try {
+      const chatCompletion = await openai.chat.completions.create({
+        model: "gpt-3.5-turbo",
+        max_tokens: 70,
+        messages: [
+          { role: "system", content: "Soil and plant health expert. Give remedies based on sensor data." },
+          { role: "user", content: `Sensor readings: ${JSON.stringify(sensorData)}. Feedback (max 50 words, POINTS only):` },
+        ],
+      });
+
+      return chatCompletion.choices[0].message.content;
+    } catch (error) {
+      console.error("AI Error:", error);
+      return "Error fetching AI feedback";
+    }
+  }
+
+  // Socket.IO connection handler
   io.on("connection", (socket) => {
     console.log("Client connected");
-    socket.emit("moistureUpdate", moistureData); // Send initial data
-  
+    socket.emit("sensorUpdate", { ai: aiFeedback }); // Send latest AI feedback
+
     socket.on("disconnect", () => {
       console.log("Client disconnected");
     });
   });
-  
+
   // User Login
   router.post("/login", async (req, res) => {
     const { email, password } = req.body;
