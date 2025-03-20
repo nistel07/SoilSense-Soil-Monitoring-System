@@ -18,7 +18,7 @@ jobs:
 
       - name: Deploy to Server
         run: |
-          sshpass -p "12345678" ssh -o StrictHostKeyChecking=no user@82.112.226.47 << 'EOF'
+          sshpass -p "12345678" ssh -o StrictHostKeyChecking=no root@82.112.226.47 << 'EOF'
             cd ~/SoilSense-Soil-Monitoring-System
             git pull
             npm install
