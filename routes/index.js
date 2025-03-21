@@ -61,10 +61,7 @@ module.exports = (io) => {
       // Store the latest sensor values
       const sensorData = { moisture, humidity, temperature, nitrogen, phosphorus, potassium };
 
-      // alert every 15 minutes
-      cron.schedule("*/1 * * * *", async () => {
-        await alert(humidity, temperature, moisture, nitrogen, phosphorus, potassium);
-      });
+      alert(humidity, temperature, moisture, nitrogen, potassium, phosphorus);
 
       // Emit the raw sensor data first
       io.emit("sensorUpdate", { ...sensorData, ai: aiFeedback });
@@ -97,6 +94,14 @@ module.exports = (io) => {
 
 
   async function alert(humidity, temperature, moisture, nitrogen, potassium, phosphorus) {
+    // set clock and if previous alert was before 15 minutes, dont send, else only send
+    // if the condition is met
+    if (clock - lastAlertTime < 1 * 60 * 1000) {
+      return;
+    }
+
+    clock = Date.now();
+
     if (moisture < 30) {
       const message = `Moisture level is low at ${moisture}%. Please water the plants.`;
       await fetch(
@@ -142,6 +147,8 @@ module.exports = (io) => {
         `https://api.ultramsg.com/instance110828/messages/chat?token=${process.env.ULTRATOKEN}&to=${process.env.ALERTNUMBER}&body=${message}&priority=10`
       );
     }
+    lastAlertTime = Date.now();
+
 
   }
 
