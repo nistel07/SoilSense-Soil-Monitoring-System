@@ -117,7 +117,7 @@ module.exports = (io) => {
       }
 
       if (humidity > 80) {
-        const message = `Humidity level is high at ${humidity}%. Please check the plants.`;
+        const message = "Humidity level is high. Please check the plants.";
         // Send alert to WhatsApp
         await fetch(
           `https://api.ultramsg.com/instance110828/messages/chat?token=${process.env.ULTRATOKEN}&to=${process.env.ALERTNUMBER}&body=${message}&priority=10`
@@ -125,28 +125,28 @@ module.exports = (io) => {
 
       }
       if (temperature > 40) {
-        const message = `Temperature level is high at ${temperature}%. Please check the plants.`;
+        const message = "Temperature level is high. Please check the plants.";
         // Send alert to WhatsApp
         await fetch(
           `https://api.ultramsg.com/instance110828/messages/chat?token=${process.env.ULTRATOKEN}&to=${process.env.ALERTNUMBER}&body=${message}&priority=10`
         );
       }
       if (nitrogen < 10) {
-        const message = `Nitrogen level is low at ${nitrogen}%. Please check the plants.`;
+        const message = "Nitrogen level is low Please check the plants.";
         // Send alert to WhatsApp
         await fetch(
           `https://api.ultramsg.com/instance110828/messages/chat?token=${process.env.ULTRATOKEN}&to=${process.env.ALERTNUMBER}&body=${message}&priority=10`
         );
       }
       if (phosphorus < 10) {
-        const message = `Phosphorus level is low at ${phosphorus}%. Please check the plants.`;
+        const message = "Phosphorus level is low. Please check the plants.";
         // Send alert to WhatsApp
         await fetch(
           `https://api.ultramsg.com/instance110828/messages/chat?token=${process.env.ULTRATOKEN}&to=${process.env.ALERTNUMBER}&body=${message}&priority=10`
         );
       }
       if (potassium < 10) {
-        const message = `Potassium level is low at ${potassium}%. Please check the plants.`;
+        const message = "Potassium level is low . Please check the plants.";
         // Send alert to WhatsApp
         await fetch(
           `https://api.ultramsg.com/instance110828/messages/chat?token=${process.env.ULTRATOKEN}&to=${process.env.ALERTNUMBER}&body=${message}&priority=10`
