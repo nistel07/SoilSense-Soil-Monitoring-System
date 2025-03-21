@@ -30,7 +30,8 @@ let moistureData = 0;
 let aiFeedback = "No feedback yet";
 
 
-
+let clock = Date.now();
+let lastAlertTime = Date.now();
 
 // Function to initialize router with io instance
 module.exports = (io) => {
@@ -49,6 +50,7 @@ module.exports = (io) => {
 
   // Route to receive sensor data
   router.post("/sensor", async (req, res) => {
+
     try {
       // Extract sensor values from request body
       const { moisture, nitrogen, phosphorus, potassium, temperature, humidity } = req.body;
@@ -62,6 +64,7 @@ module.exports = (io) => {
       const sensorData = { moisture, humidity, temperature, nitrogen, phosphorus, potassium };
 
       alert(humidity, temperature, moisture, nitrogen, potassium, phosphorus);
+      clock = Date.now();
 
       // Emit the raw sensor data first
       io.emit("sensorUpdate", { ...sensorData, ai: aiFeedback });
@@ -92,20 +95,18 @@ module.exports = (io) => {
     }
   });
 
-  let clock = Date.now();
-  let lastAlertTime = Date.now();
+ 
   async function alert(humidity, temperature, moisture, nitrogen, potassium, phosphorus) {
 
     // set clock and if previous alert was before 15 minutes, dont send, else only send
+    console.log("Alert sent less than 15 minutes ago:  "+(clock - lastAlertTime));
     // if the condition is met
     if (clock - lastAlertTime < 1 * 60 * 1000) {
+      console.log("Alert sent less than 1 minute ago:  "+(clock - lastAlertTime));
+      
       return;
     } else {
-      clock = Date.now();
-
-
-
-
+      
       if (moisture < 30) {
         const message = "Moisture level is low at ${moisture}%. Please water the plants.";
         await fetch(
