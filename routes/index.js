@@ -101,14 +101,14 @@ module.exports = (io) => {
     // set clock and if previous alert was before 15 minutes, dont send, else only send
     console.log("Alert sent less than 15 minutes ago:  "+(clock - lastAlertTime));
     // if the condition is met
-    if (clock - lastAlertTime < 1 * 60 * 1000) {
+    if (clock - lastAlertTime < 15 * 60 * 1000) {
       console.log("Alert sent less than 1 minute ago:  "+(clock - lastAlertTime));
       
       return;
     } else {
       
       if (moisture < 30) {
-        const message = "Moisture level is low at ${moisture}%. Please water the plants.";
+        const message = "Moisture level is low. Please water the plants.";
         await fetch(
           `https://api.ultramsg.com/instance110828/messages/chat?token=${process.env.ULTRATOKEN}&to=${process.env.ALERTNUMBER}&body=${message}&priority=10`
         );
