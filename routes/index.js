@@ -92,60 +92,65 @@ module.exports = (io) => {
     }
   });
 
-
+  let clock = Date.now();
+  let lastAlertTime = Date.now();
   async function alert(humidity, temperature, moisture, nitrogen, potassium, phosphorus) {
+
     // set clock and if previous alert was before 15 minutes, dont send, else only send
     // if the condition is met
     if (clock - lastAlertTime < 1 * 60 * 1000) {
       return;
-    }
-
-    clock = Date.now();
-
-    if (moisture < 30) {
-      const message = `Moisture level is low at ${moisture}%. Please water the plants.`;
-      await fetch(
-        `https://api.ultramsg.com/instance110828/messages/chat?token=${process.env.ULTRATOKEN}&to=${process.env.ALERTNUMBER}&body=${message}&priority=10`
-      );
+    } else {
+      clock = Date.now();
 
 
-    }
 
-    if (humidity > 80) {
-      const message = `Humidity level is high at ${humidity}%. Please check the plants.`;
-      // Send alert to WhatsApp
-      await fetch(
-        `https://api.ultramsg.com/instance110828/messages/chat?token=${process.env.ULTRATOKEN}&to=${process.env.ALERTNUMBER}&body=${message}&priority=10`
-      );
 
-    }
-    if (temperature > 40) {
-      const message = `Temperature level is high at ${temperature}%. Please check the plants.`;
-      // Send alert to WhatsApp
-      await fetch(
-        `https://api.ultramsg.com/instance110828/messages/chat?token=${process.env.ULTRATOKEN}&to=${process.env.ALERTNUMBER}&body=${message}&priority=10`
-      );
-    }
-    if (nitrogen < 10) {
-      const message = `Nitrogen level is low at ${nitrogen}%. Please check the plants.`;
-      // Send alert to WhatsApp
-      await fetch(
-        `https://api.ultramsg.com/instance110828/messages/chat?token=${process.env.ULTRATOKEN}&to=${process.env.ALERTNUMBER}&body=${message}&priority=10`
-      );
-    }
-    if (phosphorus < 10) {
-      const message = `Phosphorus level is low at ${phosphorus}%. Please check the plants.`;
-      // Send alert to WhatsApp
-      await fetch(
-        `https://api.ultramsg.com/instance110828/messages/chat?token=${process.env.ULTRATOKEN}&to=${process.env.ALERTNUMBER}&body=${message}&priority=10`
-      );
-    }
-    if (potassium < 10) {
-      const message = `Potassium level is low at ${potassium}%. Please check the plants.`;
-      // Send alert to WhatsApp
-      await fetch(
-        `https://api.ultramsg.com/instance110828/messages/chat?token=${process.env.ULTRATOKEN}&to=${process.env.ALERTNUMBER}&body=${message}&priority=10`
-      );
+      if (moisture < 30) {
+        const message = "Moisture level is low at ${moisture}%. Please water the plants.";
+        await fetch(
+          `https://api.ultramsg.com/instance110828/messages/chat?token=${process.env.ULTRATOKEN}&to=${process.env.ALERTNUMBER}&body=${message}&priority=10`
+        );
+
+
+      }
+
+      if (humidity > 80) {
+        const message = `Humidity level is high at ${humidity}%. Please check the plants.`;
+        // Send alert to WhatsApp
+        await fetch(
+          `https://api.ultramsg.com/instance110828/messages/chat?token=${process.env.ULTRATOKEN}&to=${process.env.ALERTNUMBER}&body=${message}&priority=10`
+        );
+
+      }
+      if (temperature > 40) {
+        const message = `Temperature level is high at ${temperature}%. Please check the plants.`;
+        // Send alert to WhatsApp
+        await fetch(
+          `https://api.ultramsg.com/instance110828/messages/chat?token=${process.env.ULTRATOKEN}&to=${process.env.ALERTNUMBER}&body=${message}&priority=10`
+        );
+      }
+      if (nitrogen < 10) {
+        const message = `Nitrogen level is low at ${nitrogen}%. Please check the plants.`;
+        // Send alert to WhatsApp
+        await fetch(
+          `https://api.ultramsg.com/instance110828/messages/chat?token=${process.env.ULTRATOKEN}&to=${process.env.ALERTNUMBER}&body=${message}&priority=10`
+        );
+      }
+      if (phosphorus < 10) {
+        const message = `Phosphorus level is low at ${phosphorus}%. Please check the plants.`;
+        // Send alert to WhatsApp
+        await fetch(
+          `https://api.ultramsg.com/instance110828/messages/chat?token=${process.env.ULTRATOKEN}&to=${process.env.ALERTNUMBER}&body=${message}&priority=10`
+        );
+      }
+      if (potassium < 10) {
+        const message = `Potassium level is low at ${potassium}%. Please check the plants.`;
+        // Send alert to WhatsApp
+        await fetch(
+          `https://api.ultramsg.com/instance110828/messages/chat?token=${process.env.ULTRATOKEN}&to=${process.env.ALERTNUMBER}&body=${message}&priority=10`
+        );
+      }
     }
     lastAlertTime = Date.now();
 
