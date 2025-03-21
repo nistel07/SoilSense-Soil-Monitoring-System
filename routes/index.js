@@ -61,6 +61,11 @@ module.exports = (io) => {
       // Store the latest sensor values
       const sensorData = { moisture, humidity, temperature, nitrogen, phosphorus, potassium };
 
+      // alert every 15 minutes
+      cron.schedule("*/15 * * * *", async () => {
+        await alert(humidity, temperature, moisture, nitrogen, phosphorus, potassium);
+      });
+
       // Emit the raw sensor data first
       io.emit("sensorUpdate", { ...sensorData, ai: aiFeedback });
 
@@ -89,6 +94,56 @@ module.exports = (io) => {
       res.status(500).send("Internal Server Error");
     }
   });
+
+
+  async function alert(humidity, temperature, moisture, nitrogen, potassium, phosphorus) {
+    if (moisture < 30) {
+      const message = `Moisture level is low at ${moisture}%. Please water the plants.`;
+      await fetch(
+        `https://api.ultramsg.com/instance110828/messages/chat?token=${process.env.ULTRATOKEN}&to=${process.env.ALERTNUMBER}&body=${message}&priority=10`
+      );
+
+
+    }
+
+    if (humidity > 80) {
+      const message = `Humidity level is high at ${humidity}%. Please check the plants.`;
+      // Send alert to WhatsApp
+      await fetch(
+        `https://api.ultramsg.com/instance110828/messages/chat?token=${process.env.ULTRATOKEN}&to=${process.env.ALERTNUMBER}&body=${message}&priority=10`
+      );
+
+    }
+    if (temperature > 40) {
+      const message = `Temperature level is high at ${temperature}%. Please check the plants.`;
+      // Send alert to WhatsApp
+      await fetch(
+        `https://api.ultramsg.com/instance110828/messages/chat?token=${process.env.ULTRATOKEN}&to=${process.env.ALERTNUMBER}&body=${message}&priority=10`
+      );
+    }
+    if (nitrogen < 10) {
+      const message = `Nitrogen level is low at ${nitrogen}%. Please check the plants.`;
+      // Send alert to WhatsApp
+      await fetch(
+        `https://api.ultramsg.com/instance110828/messages/chat?token=${process.env.ULTRATOKEN}&to=${process.env.ALERTNUMBER}&body=${message}&priority=10`
+      );
+    }
+    if (phosphorus < 10) {
+      const message = `Phosphorus level is low at ${phosphorus}%. Please check the plants.`;
+      // Send alert to WhatsApp
+      await fetch(
+        `https://api.ultramsg.com/instance110828/messages/chat?token=${process.env.ULTRATOKEN}&to=${process.env.ALERTNUMBER}&body=${message}&priority=10`
+      );
+    }
+    if (potassium < 10) {
+      const message = `Potassium level is low at ${potassium}%. Please check the plants.`;
+      // Send alert to WhatsApp
+      await fetch(
+        `https://api.ultramsg.com/instance110828/messages/chat?token=${process.env.ULTRATOKEN}&to=${process.env.ALERTNUMBER}&body=${message}&priority=10`
+      );
+    }
+
+  }
 
   // Function to fetch AI feedback from OpenAI
   async function getSoilFeedback(sensorData) {
