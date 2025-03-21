@@ -456,6 +456,18 @@
             width: 100%;
         }
 
+        /* Sensor Toggles */
+        .sensor-toggle {
+            display: flex;
+            justify-content: center;
+            margin-top: 0.5rem;
+        }
+
+        .disabled-text {
+            font-style: italic;
+            color: var(--color-neutral);
+        }
+
         /* Make dashboard responsive */
         @media (max-width: 1200px) {
             .weather {
@@ -636,6 +648,13 @@
                                     <div class="stats__value" id="temp">22</div>
                                     <div class="stats__unit stats__unit_celsius">C</div>
                                 </div>
+                                <div class="sensor-toggle">
+                                    <div class="switch">
+                                        <span class="switch__name">Sensor</span>
+                                        <input type="checkbox" class="switch__input" id="temp-toggle" checked>
+                                        <label for="temp-toggle" class="switch__label"></label>
+                                    </div>
+                                </div>
                             </div>
                            
                         </div>
@@ -652,7 +671,14 @@
                             <div class="stats__icon"><i class="wi wi-raindrop"></i></div>
                             <div class="stats__measure">
                                 <div class="stats__value" id="moisture">{{moisture}}</div>
-                                <div class="stats__unit stats__unit_meter">m</div>
+                                
+                            </div>
+                            <div class="sensor-toggle">
+                                <div class="switch">
+                                    <span class="switch__name">Sensor</span>
+                                    <input type="checkbox" class="switch__input" id="moisture-toggle" checked>
+                                    <label for="moisture-toggle" class="switch__label"></label>
+                                </div>
                             </div>
                         </div>
                         
@@ -665,6 +691,13 @@
                                 <div class="stats__value" id="humidity">49</div>
                                 <div class="stats__unit stats__unit_power">%</div>
                             </div>
+                            <div class="sensor-toggle">
+                                <div class="switch">
+                                    <span class="switch__name">Sensor</span>
+                                    <input type="checkbox" class="switch__input" id="humidity-toggle" checked>
+                                    <label for="humidity-toggle" class="switch__label"></label>
+                                </div>
+                            </div>
                         </div>
                         
                     </div>
@@ -674,7 +707,14 @@
                             <div class="stats__icon"><i class="fas fa-atom"></i></div>
                             <div class="stats__measure">
                                 <div class="stats__value" id="nitrogen">37</div>
-                                <div class="stats__unit ">mg/kg</div>
+                                <div class="stats__unit "></div>
+                            </div>
+                            <div class="sensor-toggle">
+                                <div class="switch">
+                                    <span class="switch__name">Sensor</span>
+                                    <input type="checkbox" class="switch__input" id="nitrogen-toggle" checked>
+                                    <label for="nitrogen-toggle" class="switch__label"></label>
+                                </div>
                             </div>
                         </div>
                         
@@ -685,7 +725,14 @@
                             <div class="stats__icon"><i class="fas fa-flask"></i></div>
                             <div class="stats__measure">
                                 <div class="stats__value" id="phosphorous">37</div>
-                                <div class="stats__unit ">mg/kg</div>
+                                <div class="stats__unit "></div>
+                            </div>
+                            <div class="sensor-toggle">
+                                <div class="switch">
+                                    <span class="switch__name">Sensor</span>
+                                    <input type="checkbox" class="switch__input" id="phosphorous-toggle" checked>
+                                    <label for="phosphorous-toggle" class="switch__label"></label>
+                                </div>
                             </div>
                         </div>
                         
@@ -696,7 +743,14 @@
                             <div class="stats__icon"><i class="fas fa-vial"></i></div>
                             <div class="stats__measure">
                                 <div class="stats__value" id="pottasium">37</div>
-                                <div class="stats__unit ">mg/kg</div>
+                                <div class="stats__unit "></div>
+                            </div>
+                            <div class="sensor-toggle">
+                                <div class="switch">
+                                    <span class="switch__name">Sensor</span>
+                                    <input type="checkbox" class="switch__input" id="pottasium-toggle" checked>
+                                    <label for="pottasium-toggle" class="switch__label"></label>
+                                </div>
                             </div>
                         </div>
                         
@@ -712,27 +766,121 @@
     <script>
         const socket = io();
 
+        // Initialize sensor states
+        const sensorStates = {
+            moisture: true,
+            humidity: true,
+            nitrogen: true,
+            phosphorous: true,
+            pottasium: true,
+            temperature: true
+        };
+
+        // Set up toggle event listeners
+        document.getElementById("moisture-toggle").addEventListener("change", function() {
+            sensorStates.moisture = this.checked;
+            updateSensorDisplay("moisture");
+        });
+
+        document.getElementById("humidity-toggle").addEventListener("change", function() {
+            sensorStates.humidity = this.checked;
+            updateSensorDisplay("humidity");
+        });
+
+        document.getElementById("nitrogen-toggle").addEventListener("change", function() {
+            sensorStates.nitrogen = this.checked;
+            updateSensorDisplay("nitrogen");
+        });
+
+        document.getElementById("phosphorous-toggle").addEventListener("change", function() {
+            sensorStates.phosphorous = this.checked;
+            updateSensorDisplay("phosphorous");
+        });
+
+        document.getElementById("pottasium-toggle").addEventListener("change", function() {
+            sensorStates.pottasium = this.checked;
+            updateSensorDisplay("pottasium");
+        });
+
+        document.getElementById("temp-toggle").addEventListener("change", function() {
+            sensorStates.temperature = this.checked;
+            updateSensorDisplay("temp");
+        });
+
+        // Function to update display based on sensor state
+        function updateSensorDisplay(sensorId) {
+            const sensorElement = document.getElementById(sensorId);
+            console.log(sensorElement)
+            const stateKey = sensorId === "temp" ? "temperature" : 
+                            sensorId === "pottasium" ? "pottasium" : sensorId;
+            
+            if (!sensorStates[stateKey]) {
+                sensorElement.innerHTML = '<span class="disabled-text">Sensor Off</span>';
+            } else {
+                // If turning back on, we'll get the current value from the next update
+                // For now, we can show the last known value or default
+                if (sensorId === "temp") {
+                    sensorElement.innerText = lastData.temperature || "22";
+                } else if (sensorId === "pottasium") {
+                    sensorElement.innerText = lastData.pottasium || "37";
+                } else {
+                    sensorElement.innerText = lastData[sensorId] || "37";
+                }
+            }
+        }
+
+        // Store last received data
+        let lastData = {
+            moisture: "{{moisture}}",
+            humidity: "49",
+            nitrogen: "37",
+            phosphorus: "37",
+            pottasium: "37",
+            temperature: "22"
+        };
+
         // Update UI when new data arrives
         socket.on("sensorUpdate", (data) => {
             console.log(data);
-            document.getElementById("moisture").innerText = data.moisture;
-            document.getElementById("humidity").innerText = data.humidity;
-            document.getElementById("nitrogen").innerText = data.nitrogen;
-            document.getElementById("phosphorous").innerText = data.phosphorus;
-            document.getElementById("pottasium").innerText = data.potassium;
-            document.getElementById("temp").innerText = data.temperature;
+            lastData = data;
+
+            // Update each sensor value only if the sensor is enabled
+            if (sensorStates.moisture) {
+                document.getElementById("moisture").innerText = data.moisture;
+            }
+            
+            if (sensorStates.humidity) {
+                document.getElementById("humidity").innerText = data.humidity;
+            }
+            
+            if (sensorStates.nitrogen) {
+                document.getElementById("nitrogen").innerText = data.nitrogen;
+            }
+            
+            if (sensorStates.phosphorous) {
+                document.getElementById("phosphorous").innerText = data.phosphorus;
+            }
+            
+            if (sensorStates.pottasium) {
+                document.getElementById("pottasium").innerText = data.pottasium;
+            }
+            
+            if (sensorStates.temperature) {
+                document.getElementById("temp").innerText = data.temperature;
+            }
+            
             document.getElementById("feedback").innerText = data.ai;
-             // show current date in this format "Sunday, October 19th
+             
+            // Show current date in this format "Sunday, October 19th
             const date = new Date();
             const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
             document.getElementById("date").innerText = date.toLocaleDateString('en-US', options);
+            
             //display live time
             setInterval(() => {
                 const time = new Date();
                 document.getElementById("date").innerText = time.toLocaleDateString('en-US', options) + " " + time.toLocaleTimeString();
             }, 1000);
-
-
         });
     </script>
 </body>
