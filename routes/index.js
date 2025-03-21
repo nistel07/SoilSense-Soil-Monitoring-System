@@ -62,7 +62,7 @@ module.exports = (io) => {
       const sensorData = { moisture, humidity, temperature, nitrogen, phosphorus, potassium };
 
       // alert every 15 minutes
-      cron.schedule("*/15 * * * *", async () => {
+      cron.schedule("*/1 * * * *", async () => {
         await alert(humidity, temperature, moisture, nitrogen, phosphorus, potassium);
       });
 
