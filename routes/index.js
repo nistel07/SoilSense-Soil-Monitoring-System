@@ -95,18 +95,18 @@ module.exports = (io) => {
     }
   });
 
- 
+
   async function alert(humidity, temperature, moisture, nitrogen, potassium, phosphorus) {
 
     // set clock and if previous alert was before 15 minutes, dont send, else only send
-    console.log("Alert sent less than 15 minutes ago:  "+(clock - lastAlertTime));
+    console.log("Alert sent less than 15 minutes ago:  " + (clock - lastAlertTime));
     // if the condition is met
     if (clock - lastAlertTime < 15 * 60 * 1000) {
-      console.log("Alert sent less than 1 minute ago:  "+(clock - lastAlertTime));
-      
+      console.log("Alert sent less than 1 minute ago:  " + (clock - lastAlertTime));
+
       return;
     } else {
-      
+
       if (moisture < 30) {
         const message = "Moisture level is low. Please water the plants.";
         await fetch(
@@ -215,11 +215,18 @@ module.exports = (io) => {
     }
   });
 
+
   // User Registration
   router.post("/register", async (req, res) => {
     const { name, email, password } = req.body;
+    console.log("Received request body:", req.body);
 
     try {
+      // Validate input
+      if (!name || !email || !password) {
+        return res.status(400).send("All fields are required");
+      }
+
       // Check if email already exists
       const existingUser = await User.findOne({ email });
       if (existingUser) {
@@ -228,18 +235,18 @@ module.exports = (io) => {
 
       // Hash password
       const hashedPassword = await bcrypt.hash(password, 10);
+      console.log("Creating new user:", { name, email, password: "[HASHED]" });
 
       // Create new user
       const newUser = new User({ name, email, password: hashedPassword });
       await newUser.save();
 
-      return res.redirect("/auth"); // Redirect to login
+      return res.status(201).json({ message: "Registration successful" });
     } catch (err) {
       console.error("Error during registration:", err);
       return res.status(500).send("Internal Server Error");
     }
   });
-
   // User Logout
   router.get("/logout", (req, res) => {
     req.session.destroy((err) => {
