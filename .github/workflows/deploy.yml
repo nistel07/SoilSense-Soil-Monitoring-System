@@ -22,5 +22,5 @@ jobs:
             cd ~/SoilSense-Soil-Monitoring-System
             git pull
             npm install
-            pm2 restart soilease || pm2 start npm --name soilease -- start
+           pm2 restart soilease --update-env || pm2 start npm --name soilease -- start -- --port=8000 --host=0.0.0.0
           EOF
