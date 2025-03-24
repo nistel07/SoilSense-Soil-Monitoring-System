@@ -165,7 +165,7 @@ module.exports = (io) => {
         model: "gpt-3.5-turbo",
         max_tokens: 70,
         messages: [
-          { role: "system", content: "Soil and plant health expert. Give remedies based on sensor data." },
+          { role: "system", content: "Soil and plant health expert. Give remedies based on sensor data. also give me 2 crop that grow on this soil on a seperate line" },
           { role: "user", content: `Sensor readings: ${JSON.stringify(sensorData)}. Feedback (max 50 words, POINTS only):` },
         ],
       });
