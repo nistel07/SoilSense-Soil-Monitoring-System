@@ -27,7 +27,8 @@ const openai = new OpenAI({
 });
 
 let moistureData = 0;
-let aiFeedback = "No feedback yet";
+let 
+aiFeedback = "No feedback yet";
 
 
 let clock = Date.now();
@@ -99,9 +100,9 @@ module.exports = (io) => {
   async function alert(humidity, temperature, moisture, nitrogen, potassium, phosphorus) {
 
     // set clock and if previous alert was before 15 minutes, dont send, else only send
-    console.log("Alert sent less than 15 minutes ago:  " + (clock - lastAlertTime));
+    console.log("Alert sent less than 2 minutes ago:  " + (clock - lastAlertTime));
     // if the condition is met
-    if (clock - lastAlertTime < 15 * 60 * 1000) {
+    if (clock - lastAlertTime < 2 * 60 * 1000) {
       console.log("Alert sent less than 1 minute ago:  " + (clock - lastAlertTime));
 
       return;
@@ -203,6 +204,7 @@ module.exports = (io) => {
 
       const isPasswordValid = await bcrypt.compare(password, user.password);
       if (!isPasswordValid) {
+        
         return res.status(400).send("Invalid email or password");
       }
 
@@ -241,7 +243,9 @@ module.exports = (io) => {
       const newUser = new User({ name, email, password: hashedPassword });
       await newUser.save();
 
-      return res.status(201).json({ message: "Registration successful" });
+      //redirect afrer alert
+      res.redirect("/auth");
+      
     } catch (err) {
       console.error("Error during registration:", err);
       return res.status(500).send("Internal Server Error");
