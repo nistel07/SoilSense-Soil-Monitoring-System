@@ -842,11 +842,23 @@
                         class="fas fa-chevron-right"></i></a>
             </div>
 
+            <div class="dashboard-card weather">
+                <div class="dashboard-card__title"><i class="wi wi-day-sunny"></i>Past 10 Minutes Feedback</div>
+                <div class="dashboad-card__content">
+                    <div class="dashboard-card__card-piece">
+                        <div class="weather-days" id="feed">
+
+                        </div>
+                    </div>
+                </div>
+                <a href="#" class="dashboard-card__link" tabindex="1">View in details<i class="fas   "></i></a>
+            </div>
         </div>
     </div>
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
+
         const socket = io();
 
         // Initialize sensor states
@@ -970,6 +982,7 @@
             fetch('/pastData')
                 .then(response => response.text())
                 .then(data => {
+
                     try {
                         // Parse the data (handling both JSON and text formats)
                         let parsedData;
@@ -980,6 +993,8 @@
                             const jsonPart = data.match(/\{.*\}/)[0];
                             parsedData = JSON.parse(jsonPart);
                         }
+                        //display feedback by pasesedData.aiFeedback in feed div
+                        document.getElementById("feed").innerText = parsedData.aiFeedback;
 
                         // Format timestamp
                         const timestamp = new Date().toLocaleTimeString();

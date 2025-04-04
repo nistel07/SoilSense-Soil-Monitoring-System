@@ -209,7 +209,23 @@ module.exports = (io) => {
       return "Error fetching AI feedback";
     }
   }
+  async function getpastfeedback(sensorData) {
+    try {
+      const chatCompletion = await openai.chat.completions.create({
+        model: "gpt-3.5-turbo",
+        max_tokens: 70,
+        messages: [
+          { role: "system", content: "Soil and plant health expert. Give remedies based on sensor data. It is last 10 minutes avg data" },
+          { role: "user", content: `Sensor readings: ${JSON.stringify(sensorData)}. Feedback (max 50 words, POINTS only):` },
+        ],
+      });
 
+      return chatCompletion.choices[0].message.content;
+    } catch (error) {
+      console.error("AI Error:", error);
+      return "Error fetching AI feedback";
+    }
+  }
   // Socket.IO connection handler
   io.on("connection", (socket) => {
     console.log("Client connected");
@@ -270,7 +286,11 @@ router.get("/pastData", async (req, res) => {
     avgData.temperature /= count;
     avgData.humidity /= count;
   }
-  res.json(avgData);
+  //now collect the data for the last 10 minutes and check ai feedback
+  const aiFeedback = await getpastfeedback(avgData);
+  console.log("AI Feedback for past data:", avgData);
+  res.json({ avgData, aiFeedback });
+ 
   
 });
 
