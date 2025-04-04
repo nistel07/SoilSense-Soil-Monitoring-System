@@ -996,32 +996,10 @@
                         //display feedback by pasesedData.aiFeedback in feed div
                         document.getElementById("feed").innerText = parsedData.aiFeedback;
 
-                        // Format timestamp
-                        const timestamp = new Date().toLocaleTimeString();
-
-                        // Create a row for the historical data
-                        const row = document.createElement('tr');
-                        row.innerHTML = `
-                    <td>${timestamp}</td>
-                    <td>${parsedData.moisture.toFixed(1)}</td>
-                    <td>${parsedData.nitrogen.toFixed(1)}</td>
-                    <td>${parsedData.phosphorus.toFixed(1)}</td>
-                    <td>${parsedData.potassium.toFixed(1)}</td>
-                    <td>${parsedData.temperature.toFixed(1)}</td>
-                    <td>${parsedData.humidity.toFixed(1)}</td>
-                `;
-
-                        // Add the row to the table
-                        const tableBody = document.getElementById('historical-data-body');
-                        tableBody.prepend(row); // Add to the top
-
-                        // Keep only the last 6 entries
-                        const rows = tableBody.getElementsByTagName('tr');
-                        if (rows.length > 6) {
-                            tableBody.removeChild(rows[rows.length - 1]);
-                        }
-                    } catch (error) {
-                        console.error("Error processing historical data:", error);
+        
+                      
+                    }catch (error) {
+                        console.error("Error parsing data:", error);
                     }
                 })
                 .catch(error => {
