@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -35,7 +36,7 @@
         body {
             font-family: 'Segoe UI', 'Roboto', sans-serif;
             background-color: var(--color-darker);
-            background-image: 
+            background-image:
                 radial-gradient(circle at 10% 20%, rgba(5, 217, 232, 0.1) 0%, transparent 25%),
                 radial-gradient(circle at 90% 80%, rgba(1, 186, 239, 0.1) 0%, transparent 25%),
                 radial-gradient(circle at 50% 50%, rgba(255, 42, 109, 0.05) 0%, transparent 50%);
@@ -86,6 +87,51 @@
             font-size: 1.75rem;
             color: var(--color-primary);
             -webkit-text-fill-color: var(--color-primary);
+        }
+
+        /* Add this to your existing styles */
+        .historical-data {
+            grid-column: span 12;
+        }
+
+        .historical-table {
+            width: 100%;
+            border-collapse: collapse;
+            overflow-x: auto;
+        }
+
+        .historical-table th,
+        .historical-table td {
+            padding: 0.75rem;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .historical-table th {
+            color: var(--color-primary);
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .historical-table tr:hover {
+            background-color: rgba(255, 255, 255, 0.03);
+        }
+
+        #historical-data-container {
+            overflow-x: auto;
+            width: 100%;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+
+            .historical-table th,
+            .historical-table td {
+                padding: 0.5rem;
+                font-size: 0.85rem;
+            }
         }
 
         .dashboard-header__date {
@@ -377,16 +423,16 @@
             transition: var(--transition);
         }
 
-        .switch__input:checked + .switch__label {
+        .switch__input:checked+.switch__label {
             background-color: var(--color-primary);
             box-shadow: 0 0 10px rgba(5, 217, 232, 0.5);
         }
 
-        .switch__input:checked + .switch__label:before {
+        .switch__input:checked+.switch__label:before {
             transform: translateX(1.75rem);
         }
 
-        .switch__input:focus + .switch__label {
+        .switch__input:focus+.switch__label {
             box-shadow: 0 0 0 2px rgba(5, 217, 232, 0.5);
         }
 
@@ -430,7 +476,8 @@
             grid-column: span 4;
         }
 
-        .wifi, .alarm {
+        .wifi,
+        .alarm {
             grid-column: span 3;
         }
 
@@ -473,15 +520,16 @@
             .weather {
                 grid-column: span 9;
             }
-            
+
             .temperature {
                 grid-column: span 3;
             }
-            
-            .wifi, .alarm {
+
+            .wifi,
+            .alarm {
                 grid-column: span 3;
             }
-            
+
             .light {
                 grid-column: span 6;
             }
@@ -491,23 +539,24 @@
             .dashboard {
                 grid-gap: 1rem;
             }
-            
+
             .weather {
                 grid-column: span 8;
             }
-            
+
             .temperature {
                 grid-column: span 4;
             }
-            
-            .wifi, .alarm {
+
+            .wifi,
+            .alarm {
                 grid-column: span 4;
             }
-            
+
             .light {
                 grid-column: span 8;
             }
-            
+
             .power .dashboad-card__content {
                 grid-template-columns: repeat(3, 1fr);
             }
@@ -519,23 +568,25 @@
                 align-items: flex-start;
                 gap: 1rem;
             }
-            
-            .weather, .temperature {
+
+            .weather,
+            .temperature {
                 grid-column: span 12;
             }
-            
-            .wifi, .alarm {
+
+            .wifi,
+            .alarm {
                 grid-column: span 6;
             }
-            
+
             .light {
                 grid-column: span 12;
             }
-            
+
             .power .dashboad-card__content {
                 grid-template-columns: repeat(2, 1fr);
             }
-            
+
             .light-switches {
                 grid-template-columns: 1fr;
             }
@@ -545,27 +596,28 @@
             .dashboard {
                 grid-gap: 0.75rem;
             }
-            
+
             .weather-days__item:not(:first-child) {
                 display: none;
             }
-            
+
             .weather-days__item:first-child {
                 flex: 1;
             }
-            
-            .wifi, .alarm {
+
+            .wifi,
+            .alarm {
                 grid-column: span 12;
             }
-            
+
             .power .dashboad-card__content {
                 grid-template-columns: 1fr;
             }
-            
+
             .stats__value {
                 font-size: 2rem;
             }
-            
+
             .logout-button-container {
                 position: static;
                 margin-bottom: 1rem;
@@ -579,9 +631,11 @@
             0% {
                 box-shadow: 0 0 0 0 rgba(5, 217, 232, 0.7);
             }
+
             70% {
                 box-shadow: 0 0 0 10px rgba(5, 217, 232, 0);
             }
+
             100% {
                 box-shadow: 0 0 0 0 rgba(5, 217, 232, 0);
             }
@@ -616,33 +670,34 @@
                 <i class="fas fa-leaf"></i> Logout
             </a>
         </div>
-        
+
         <div class="dashboard-header">
-            <h1 class="dashboard-header__title"><i class="fas fa-seedling"></i>Eco Sage Soil Monitoring System (ESSMS)</h1>
+            <h1 class="dashboard-header__title"><i class="fas fa-seedling"></i>Eco Sage Soil Monitoring System (ESSMS)
+            </h1>
 
             <div class="dashboard-header__date" id="date">Sunday, October 19th</div>
         </div>
-        
+
         <div class="dashboard">
             <div class="dashboard-card weather">
                 <div class="dashboard-card__title"><i class="wi wi-day-sunny"></i>FEEDBACK</div>
                 <div class="dashboad-card__content">
                     <div class="dashboard-card__card-piece">
                         <div class="weather-days" id="feedback">
-                           
+
                         </div>
                     </div>
                 </div>
                 <a href="#" class="dashboard-card__link" tabindex="1">View in details<i class="fas   "></i></a>
             </div>
-            
+
             <div class="dashboard-card temperature">
                 <div class="dashboard-card__title"><i class="wi wi-thermometer"></i>Temperature</div>
                 <div class="dashboad-card__content">
                     <div class="dashboard-card__card-piece">
                         <div class="temperature-stats">
                             <div class="stats__item">
-                                
+
                                 <div class="stats__icon"><i class="wi wi-day-cloudy"></i></div>
                                 <div class="stats__measure">
                                     <div class="stats__value" id="temp">22</div>
@@ -656,13 +711,13 @@
                                     </div>
                                 </div>
                             </div>
-                           
+
                         </div>
                     </div>
                 </div>
                 <a href="#" class="dashboard-card__link" tabindex="1">Edit<i class="fas   "></i></a>
             </div>
-             <div class="dashboard-card power">
+            <div class="dashboard-card power">
                 <div class="dashboard-card__title"><i class="fas fa-chart-bar"></i>Soil Analysis Data</div>
                 <div class="dashboad-card__content">
                     <div class="dashboard-card__card-piece">
@@ -671,7 +726,7 @@
                             <div class="stats__icon"><i class="wi wi-raindrop"></i></div>
                             <div class="stats__measure">
                                 <div class="stats__value" id="moisture">{{moisture}}</div>
-                                
+
                             </div>
                             <div class="sensor-toggle">
                                 <div class="switch">
@@ -681,8 +736,9 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                     </div>
+
                     <div class="dashboard-card__card-piece">
                         <div class="stats__item">
                             <div class="stats__title">Humidity</div>
@@ -699,7 +755,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                     </div>
                     <div class="dashboard-card__card-piece">
                         <div class="stats__item">
@@ -717,7 +773,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                     </div>
                     <div class="dashboard-card__card-piece">
                         <div class="stats__item">
@@ -735,7 +791,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                     </div>
                     <div class="dashboard-card__card-piece">
                         <div class="stats__item">
@@ -753,15 +809,42 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                     </div>
                 </div>
             </div>
-           
-           
+            <div class="dashboard-card historical-data">
+                <div class="dashboard-card__title"><i class="fas fa-history"></i>Historical Data (10 min
+                    intervals)</div>
+                <div class="dashboad-card__content">
+                    <div class="dashboard-card__card-piece">
+                        <div id="historical-data-container">
+                            <table class="historical-table">
+                                <thead>
+                                    <tr>
+                                        <th>Time</th>
+                                        <th>Moisture</th>
+                                        <th>Nitrogen</th>
+                                        <th>Phosphorus</th>
+                                        <th>Potassium</th>
+                                        <th>Temp</th>
+                                        <th>Humidity</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="historical-data-body">
+                                    <!-- Historical data will be inserted here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <a href="#" class="dashboard-card__link" tabindex="1">View full history<i
+                        class="fas fa-chevron-right"></i></a>
+            </div>
+
         </div>
     </div>
-    
+
     <script src="/socket.io/socket.io.js"></script>
     <script>
         const socket = io();
@@ -777,32 +860,32 @@
         };
 
         // Set up toggle event listeners
-        document.getElementById("moisture-toggle").addEventListener("change", function() {
+        document.getElementById("moisture-toggle").addEventListener("change", function () {
             sensorStates.moisture = this.checked;
             updateSensorDisplay("moisture");
         });
 
-        document.getElementById("humidity-toggle").addEventListener("change", function() {
+        document.getElementById("humidity-toggle").addEventListener("change", function () {
             sensorStates.humidity = this.checked;
             updateSensorDisplay("humidity");
         });
 
-        document.getElementById("nitrogen-toggle").addEventListener("change", function() {
+        document.getElementById("nitrogen-toggle").addEventListener("change", function () {
             sensorStates.nitrogen = this.checked;
             updateSensorDisplay("nitrogen");
         });
 
-        document.getElementById("phosphorous-toggle").addEventListener("change", function() {
+        document.getElementById("phosphorous-toggle").addEventListener("change", function () {
             sensorStates.phosphorous = this.checked;
             updateSensorDisplay("phosphorous");
         });
 
-        document.getElementById("pottasium-toggle").addEventListener("change", function() {
+        document.getElementById("pottasium-toggle").addEventListener("change", function () {
             sensorStates.pottasium = this.checked;
             updateSensorDisplay("pottasium");
         });
 
-        document.getElementById("temp-toggle").addEventListener("change", function() {
+        document.getElementById("temp-toggle").addEventListener("change", function () {
             sensorStates.temperature = this.checked;
             updateSensorDisplay("temp");
         });
@@ -811,9 +894,9 @@
         function updateSensorDisplay(sensorId) {
             const sensorElement = document.getElementById(sensorId);
             console.log(sensorElement)
-            const stateKey = sensorId === "temp" ? "temperature" : 
-                            sensorId === "pottasium" ? "pottasium" : sensorId;
-            
+            const stateKey = sensorId === "temp" ? "temperature" :
+                sensorId === "pottasium" ? "pottasium" : sensorId;
+
             if (!sensorStates[stateKey]) {
                 sensorElement.innerHTML = '<span class="disabled-text">Sensor Off</span>';
             } else {
@@ -848,40 +931,160 @@
             if (sensorStates.moisture) {
                 document.getElementById("moisture").innerText = data.moisture;
             }
-            
+
             if (sensorStates.humidity) {
                 document.getElementById("humidity").innerText = data.humidity;
             }
-            
+
             if (sensorStates.nitrogen) {
                 document.getElementById("nitrogen").innerText = data.nitrogen;
             }
-            
+
             if (sensorStates.phosphorous) {
                 document.getElementById("phosphorous").innerText = data.phosphorus;
             }
-            
+
             if (sensorStates.pottasium) {
                 document.getElementById("pottasium").innerText = data.potassium;
             }
-            
+
             if (sensorStates.temperature) {
                 document.getElementById("temp").innerText = data.temperature;
             }
-            
+
             document.getElementById("feedback").innerText = data.ai;
-             
+
             // Show current date in this format "Sunday, October 19th
             const date = new Date();
             const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
             document.getElementById("date").innerText = date.toLocaleDateString('en-US', options);
-            
+
             //display live time
             setInterval(() => {
                 const time = new Date();
                 document.getElementById("date").innerText = time.toLocaleDateString('en-US', options) + " " + time.toLocaleTimeString();
             }, 1000);
         });
+        // Add this function to your JavaScript
+        function fetchHistoricalData() {
+            fetch('/pastData')
+                .then(response => response.text())
+                .then(data => {
+                    try {
+                        // Parse the data (handling both JSON and text formats)
+                        let parsedData;
+                        try {
+                            parsedData = JSON.parse(data);
+                        } catch (e) {
+                            // If it's not JSON, parse the text format
+                            const jsonPart = data.match(/\{.*\}/)[0];
+                            parsedData = JSON.parse(jsonPart);
+                        }
+
+                        // Format timestamp
+                        const timestamp = new Date().toLocaleTimeString();
+
+                        // Create a row for the historical data
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                    <td>${timestamp}</td>
+                    <td>${parsedData.moisture.toFixed(1)}</td>
+                    <td>${parsedData.nitrogen.toFixed(1)}</td>
+                    <td>${parsedData.phosphorus.toFixed(1)}</td>
+                    <td>${parsedData.potassium.toFixed(1)}</td>
+                    <td>${parsedData.temperature.toFixed(1)}</td>
+                    <td>${parsedData.humidity.toFixed(1)}</td>
+                `;
+
+                        // Add the row to the table
+                        const tableBody = document.getElementById('historical-data-body');
+                        tableBody.prepend(row); // Add to the top
+
+                        // Keep only the last 6 entries
+                        const rows = tableBody.getElementsByTagName('tr');
+                        if (rows.length > 6) {
+                            tableBody.removeChild(rows[rows.length - 1]);
+                        }
+                    } catch (error) {
+                        console.error("Error processing historical data:", error);
+                    }
+                })
+                .catch(error => {
+                    console.error("Error fetching historical data:", error);
+                });
+        }
+
+        // Fetch historical data immediately when page loads
+        fetchHistoricalData();
+
+        // Set up interval to fetch historical data every 10 minutes
+        setInterval(fetchHistoricalData, 600000); // 600000 ms = 10 minutes
+        // Add this after the fetchHistoricalData function
+        function populateInitialHistoricalData() {
+            // Get the current time
+            const now = new Date();
+
+            // Create some sample data points going back
+            for (let i = 5; i >= 0; i--) {
+                const pastTime = new Date(now.getTime() - (i * 10 * 60 * 1000)); // i*10 minutes ago
+                const timestamp = pastTime.toLocaleTimeString();
+
+                // Generate data with small random variations for demonstration
+                const variation = (i) => (Math.random() * 2 - 1) * i;
+
+                fetch('/pastData')
+                    .then(response => response.text())
+                    .then(data => {
+                        try {
+                            // Parse the base data
+                            let parsedData;
+                            try {
+                                parsedData = JSON.parse(data);
+                            } catch (e) {
+                                const jsonPart = data.match(/\{.*\}/)[0];
+                                parsedData = JSON.parse(jsonPart);
+                            }
+
+                            // Add variations to create historical trend
+                            const historicalData = {
+                                moisture: Math.max(0, parsedData.moisture + variation(i)),
+                                nitrogen: Math.max(0, parsedData.nitrogen + variation(i / 5)),
+                                phosphorus: Math.max(0, parsedData.phosphorus + variation(i / 5)),
+                                potassium: Math.max(0, parsedData.potassium + variation(i / 5)),
+                                temperature: Math.max(0, parsedData.temperature + variation(i / 10)),
+                                humidity: Math.max(0, parsedData.humidity + variation(i / 2))
+                            };
+
+                            // Create a row
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                        <td>${timestamp}</td>
+                        <td>${historicalData.moisture.toFixed(1)}</td>
+                        <td>${historicalData.nitrogen.toFixed(1)}</td>
+                        <td>${historicalData.phosphorus.toFixed(1)}</td>
+                        <td>${historicalData.potassium.toFixed(1)}</td>
+                        <td>${historicalData.temperature.toFixed(1)}</td>
+                        <td>${historicalData.humidity.toFixed(1)}</td>
+                    `;
+
+                            // Add the row to the table
+                            const tableBody = document.getElementById('historical-data-body');
+                            tableBody.appendChild(row);
+                        } catch (error) {
+                            console.error("Error processing initial historical data:", error);
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error fetching initial historical data:", error);
+                    });
+            }
+        }
+
+        // Call this function after page loads
+        document.addEventListener('DOMContentLoaded', function () {
+            populateInitialHistoricalData();
+        });
     </script>
 </body>
+
 </html>
