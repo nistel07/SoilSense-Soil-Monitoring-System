@@ -2,6 +2,7 @@ var express = require("express");
 var router = express.Router();
 const bcrypt = require("bcryptjs");
 const User = require("../models/user");
+const SensorData = require("../models/sensorData");
 const isAuthenticated = require("../middlewares/authMiddleware");
 const http = require("http");
 const { Server } = require("socket.io");
@@ -55,6 +56,37 @@ module.exports = (io) => {
     try {
       // Extract sensor values from request body
       const { moisture, nitrogen, phosphorus, potassium, temperature, humidity } = req.body;
+      //save this data to db and give me avg values every 10 minutes
+      console.log("Received sensor data:", req.body);
+      // Validate sensor data
+      if (!moisture || !nitrogen || !phosphorus || !potassium || !temperature || !humidity) {
+        return res.status(400).send("All sensor data is required");
+      }
+      
+      // Save the latest moisture data
+      moistureData = moisture;
+      // Save the latest nitrogen data
+      nitrogenData = nitrogen;
+
+      // Save the latest phosphorus data
+      phosphorusData = phosphorus;
+      // Save the latest potassium data
+      potassiumData = potassium;
+      // Save the latest temperature data
+      temperatureData = temperature;
+      // Save the latest humidity data
+      humidityData = humidity;
+
+      const sdata = new SensorData({
+        moisture,
+        nitrogen,
+        phosphorus,
+        potassium,
+        temperature,
+        humidity,
+      });
+      await sdata.save();
+      
 
       // Ensure valid sensor data
       if ([moisture, nitrogen, phosphorus, potassium, temperature, humidity].some(isNaN)) {
@@ -216,7 +248,31 @@ module.exports = (io) => {
       res.status(500).send("Internal Server Error");
     }
   });
-
+router.get("/pastData", async (req, res) => {
+  // get avg of all data in the last 10 minutes
+  const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000);
+  const sensorData = await SensorData.find({ createdAt: { $gte: tenMinutesAgo } });
+  const avgData = sensorData.reduce((acc, data) => {
+    acc.moisture += data.moisture;
+    acc.nitrogen += data.nitrogen;
+    acc.phosphorus += data.phosphorus;
+    acc.potassium += data.potassium;
+    acc.temperature += data.temperature;
+    acc.humidity += data.humidity;
+    return acc;
+  }, { moisture: 0, nitrogen: 0, phosphorus: 0, potassium: 0, temperature: 0, humidity: 0 });
+  const count = sensorData.length;
+  if (count > 0) {
+    avgData.moisture /= count;
+    avgData.nitrogen /= count;
+    avgData.phosphorus /= count;
+    avgData.potassium /= count;
+    avgData.temperature /= count;
+    avgData.humidity /= count;
+  }
+  res.json(avgData);
+  
+});
 
   // User Registration
   router.post("/register", async (req, res) => {
