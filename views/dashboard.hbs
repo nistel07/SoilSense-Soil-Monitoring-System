@@ -1033,6 +1033,7 @@
                             let parsedData;
                             try {
                                 parsedData = JSON.parse(data);
+                                parsedData=parsedData.avgData
                             } catch (e) {
                                 const jsonPart = data.match(/\{.*\}/)[0];
                                 parsedData = JSON.parse(jsonPart);
@@ -1061,6 +1062,7 @@
                     `;
 
                             // Add the row to the table
+                            console.log(historicalData)
                             const tableBody = document.getElementById('historical-data-body');
                             tableBody.appendChild(row);
                         } catch (error) {
