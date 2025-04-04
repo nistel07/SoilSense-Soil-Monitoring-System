@@ -59,9 +59,7 @@ module.exports = (io) => {
       //save this data to db and give me avg values every 10 minutes
       console.log("Received sensor data:", req.body);
       // Validate sensor data
-      if (!moisture || !nitrogen || !phosphorus || !potassium || !temperature || !humidity) {
-        return res.status(400).send("All sensor data is required");
-      }
+      
       
       // Save the latest moisture data
       moistureData = moisture;
