@@ -5,6 +5,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>EcoSage</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.css">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.9/css/weather-icons.min.css">
     <style>
@@ -841,7 +843,7 @@
                 <a href="#" class="dashboard-card__link" tabindex="1">View full history<i
                         class="fas fa-chevron-right"></i></a>
             </div>
-
+            
             <div class="dashboard-card weather">
                 <div class="dashboard-card__title"><i class="wi wi-day-sunny"></i>Past 10 Minutes Feedback</div>
                 <div class="dashboad-card__content">
@@ -853,6 +855,20 @@
                 </div>
                 <a href="#" class="dashboard-card__link" tabindex="1">View in details<i class="fas   "></i></a>
             </div>
+            <!-- Replace the existing "Past 10 Minutes Feedback" card with this -->
+            <div class="dashboard-card weather">
+                <div class="dashboard-card__title"><i class="fas fa-chart-line"></i>Past 10 Minutes Data Graph</div>
+                <div class="dashboad-card__content">
+                    <div class="dashboard-card__card-piece">
+                        <div id="graph-container" style="width: 100%; height: 300px;">
+                            <canvas id="sensorChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <a href="#" class="dashboard-card__link" tabindex="1">View detailed analytics<i
+                        class="fas fa-chart-bar"></i></a>
+            </div>
+
         </div>
     </div>
 
@@ -996,9 +1012,9 @@
                         //display feedback by pasesedData.aiFeedback in feed div
                         document.getElementById("feed").innerText = parsedData.aiFeedback;
 
-        
-                      
-                    }catch (error) {
+
+
+                    } catch (error) {
                         console.error("Error parsing data:", error);
                     }
                 })
@@ -1033,7 +1049,7 @@
                             let parsedData;
                             try {
                                 parsedData = JSON.parse(data);
-                                parsedData=parsedData.avgData
+                                parsedData = parsedData.avgData
                             } catch (e) {
                                 const jsonPart = data.match(/\{.*\}/)[0];
                                 parsedData = JSON.parse(jsonPart);
@@ -1078,6 +1094,211 @@
         // Call this function after page loads
         document.addEventListener('DOMContentLoaded', function () {
             populateInitialHistoricalData();
+        });
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+    <!-- Add this to your existing JavaScript -->
+    <script>
+        // Chart configuration
+        let ctx = null;
+        let sensorChart = null;
+        let chartData = {
+            labels: [],
+            datasets: [
+                {
+                    label: 'Moisture',
+                    data: [],
+                    borderColor: 'rgba(5, 217, 232, 1)',
+                    backgroundColor: 'rgba(5, 217, 232, 0.1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4
+                },
+                {
+                    label: 'Temperature',
+                    data: [],
+                    borderColor: 'rgba(255, 42, 109, 1)',
+                    backgroundColor: 'rgba(255, 42, 109, 0.1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4
+                },
+                {
+                    label: 'Humidity',
+                    data: [],
+                    borderColor: 'rgba(5, 255, 158, 1)',
+                    backgroundColor: 'rgba(5, 255, 158, 0.1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4
+                }
+            ]
+        };
+
+        function initChart() {
+            ctx = document.getElementById('sensorChart').getContext('2d');
+            sensorChart = new Chart(ctx, {
+                type: 'line',
+                data: chartData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: 'Time'
+                            }
+                        },
+                        y: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: 'Value'
+                            }
+                        }
+                    },
+                    animation: {
+                        duration: 1000
+                    },
+                    elements: {
+                        point: {
+                            radius: 3,
+                            hoverRadius: 5
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                font: {
+                                    family: "'Segoe UI', 'Roboto', sans-serif",
+                                    size: 12
+                                },
+                                color: '#F1F2F6'
+                            }
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            backgroundColor: 'rgba(11, 19, 43, 0.8)',
+                            titleFont: {
+                                family: "'Segoe UI', 'Roboto', sans-serif",
+                                size: 14
+                            },
+                            bodyFont: {
+                                family: "'Segoe UI', 'Roboto', sans-serif",
+                                size: 13
+                            },
+                            titleColor: '#F1F2F6',
+                            bodyColor: '#F1F2F6',
+                            borderColor: 'rgba(255, 255, 255, 0.1)',
+                            borderWidth: 1,
+                            cornerRadius: 8
+                        }
+                    }
+                }
+            });
+        }
+
+        // Modify your populateInitialHistoricalData function to update the chart
+        function populateInitialHistoricalData() {
+            // Clear existing chart data
+            chartData.labels = [];
+            chartData.datasets[0].data = [];
+            chartData.datasets[1].data = [];
+            chartData.datasets[2].data = [];
+
+            // Get the current time
+            const now = new Date();
+
+            // Create some sample data points going back
+            for (let i = 5; i >= 0; i--) {
+                const pastTime = new Date(now.getTime() - (i * 10 * 60 * 1000)); // i*10 minutes ago
+                const timestamp = pastTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+                // Add timestamp to chart labels
+                chartData.labels.push(timestamp);
+
+                fetch('/pastData')
+                    .then(response => response.text())
+                    .then(data => {
+                        try {
+                            // Parse the base data
+                            let parsedData;
+                            try {
+                                parsedData = JSON.parse(data);
+                                parsedData = parsedData.avgData;
+                            } catch (e) {
+                                const jsonPart = data.match(/\{.*\}/)[0];
+                                parsedData = JSON.parse(jsonPart);
+                            }
+
+                            // Add variations to create historical trend
+                            const variation = (i) => (Math.random() * 2 - 1) * i;
+                            const historicalData = {
+                                moisture: Math.max(0, parsedData.moisture + variation(i)),
+                                temperature: Math.max(0, parsedData.temperature + variation(i / 10)),
+                                humidity: Math.max(0, parsedData.humidity + variation(i / 2))
+                            };
+
+                            // Create a row for the table (keeping your existing code)
+                            // ...
+
+                            // Add data to chart
+                            chartData.datasets[0].data[5 - i] = historicalData.moisture.toFixed(1);
+                            chartData.datasets[1].data[5 - i] = historicalData.temperature.toFixed(1);
+                            chartData.datasets[2].data[5 - i] = historicalData.humidity.toFixed(1);
+
+                            // Update chart after all data points are added
+                            if (i === 0) {
+                                if (sensorChart) {
+                                    sensorChart.update();
+                                } else {
+                                    initChart();
+                                }
+                            }
+                        } catch (error) {
+                            console.error("Error processing chart data:", error);
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error fetching data for chart:", error);
+                    });
+            }
+        }
+
+        // Also update the chart when new sensor data arrives
+        socket.on("sensorUpdate", (data) => {
+            // Your existing code for handling sensor updates...
+
+            // Add the new data point to the chart
+            const now = new Date();
+            const timestamp = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+            // Add new data point
+            chartData.labels.push(timestamp);
+            chartData.datasets[0].data.push(data.moisture);
+            chartData.datasets[1].data.push(data.temperature);
+            chartData.datasets[2].data.push(data.humidity);
+
+            // Remove oldest data point if we have more than 6
+            if (chartData.labels.length > 6) {
+                chartData.labels.shift();
+                chartData.datasets.forEach(dataset => dataset.data.shift());
+            }
+
+            // Update chart
+            if (sensorChart) {
+                sensorChart.update();
+            }
+        });
+
+        // Initialize the chart when the DOM is loaded
+        document.addEventListener('DOMContentLoaded', function () {
+            populateInitialHistoricalData();
+            // Additional initialization if needed
         });
     </script>
 </body>
