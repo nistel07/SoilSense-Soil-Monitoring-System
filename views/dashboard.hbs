@@ -1282,7 +1282,20 @@
             chartData.datasets[0].data.push(data.moisture);
             chartData.datasets[1].data.push(data.temperature);
             chartData.datasets[2].data.push(data.humidity);
-
+            //table for historical data
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${timestamp}</td>
+                <td>${data.moisture.toFixed(1)}</td>
+                <td>${data.nitrogen.toFixed(1)}</td>
+                <td>${data.phosphorus.toFixed(1)}</td>
+                <td>${data.potassium.toFixed(1)}</td>
+                <td>${data.temperature.toFixed(1)}</td>
+                <td>${data.humidity.toFixed(1)}</td>
+            `;
+            const tableBody = document.getElementById('historical-data-body');
+            tableBody.appendChild(row);
+            
             // Remove oldest data point if we have more than 6
             if (chartData.labels.length > 6) {
                 chartData.labels.shift();
